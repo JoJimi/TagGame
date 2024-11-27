@@ -23,7 +23,6 @@ Desktop.ini
 *.log
 
 # Sensitive files
-application.properties
 application.yml
 
 HELP.md
