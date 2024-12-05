@@ -17,7 +17,7 @@
         <img src="images/russian.png" alt="Game 1" class="game-image">
         <p class="game-title">러시안 룰렛</p>
       </a>
-      <a href="game2.html" class="game-card">
+      <a href="game2.jsp" class="game-card">
         <img src="images/rock.png" alt="Game 2" class="game-image">
         <p class="game-title">가위 바위 보</p>
       </a>
