@@ -1,5 +1,6 @@
 /build/
 /Users/
+/WEB-INF/lib
 mvnw.cmd
 mvnw
 
