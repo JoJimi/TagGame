@@ -1,10 +1,6 @@
 /build/
 /Users/
-<<<<<<< HEAD
-mysql-connector-j-8.0.33.jar
-=======
-/WEB-INF/lib
->>>>>>> bda6985aaa6e0d3c972319b9a1a092f01361b7ee
+
 mvnw.cmd
 mvnw
 
