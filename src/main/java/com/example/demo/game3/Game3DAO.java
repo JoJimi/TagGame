@@ -1,16 +1,16 @@
 package com.example.demo.game3;
 
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.SQLException;
 
 import javax.sql.DataSource;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Repository;
 
-@Component
+@Repository
 public class Game3DAO {
+	
 	@Autowired
     private DataSource dataSource;
 
