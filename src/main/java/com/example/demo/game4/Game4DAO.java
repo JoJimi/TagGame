@@ -91,6 +91,9 @@ public class Game4DAO {
 			 if(pstmt.executeUpdate() == 0) {
 				 throw new SQLException("DB 에러");
 			 }
-		 }
+		 }catch (SQLException e) {
+            e.printStackTrace();
+            throw new RuntimeException("DB 에러");
+        }
 	}   
 }
