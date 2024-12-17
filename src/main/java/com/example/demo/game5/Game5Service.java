@@ -16,6 +16,7 @@ public class Game5Service {
 
     public Map<Integer, List<Integer>> playGame(int participantCount, int winnerApartmentFloor) {
         int totalFloors = participantCount * 2; // 총 아파트 층 수
+        
         Map<Integer, List<Integer>> participantFloors = new HashMap<>(); // 참여자와 층수 매핑
         Set<Integer> assignedFloors = new HashSet<>(); // 중복 방지를 위한 층수 저장소
         

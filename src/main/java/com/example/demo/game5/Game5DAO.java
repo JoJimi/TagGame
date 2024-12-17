@@ -42,6 +42,7 @@ public class Game5DAO {
             e.printStackTrace();
             throw new RuntimeException("DB 저장 중 에러 발생");
         }
+        
     }
 
     // 2. 모든 게임 결과 조회

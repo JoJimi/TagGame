@@ -58,4 +58,5 @@ public class Game5Result {
     public void setGameStartTime(LocalDateTime gameStartTime) {
         this.gameStartTime = gameStartTime;
     }
+    
 }
