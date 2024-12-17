@@ -26,12 +26,20 @@ public class Game2Controller {
 
 	// 게임 결과 (game2.jsp로 게임 결과 보냄)
 	@PostMapping("/play")
-	public String playGame(@RequestParam String userName, @RequestParam String userChoice, Model model)
-			throws Exception {
-		String result = game2Service.playGame(userName, userChoice);
-		model.addAttribute("result", result);
+	public String playGame(@RequestParam String userName, @RequestParam String userChoice, Model model) throws Exception {
+	    String result = game2Service.playGame(userName, userChoice);
 
-		return "game2";
+	    // 컴퓨터 선택 가져오기
+	    String computerChoice = game2Service.getLastComputerChoice();
+
+	    // 결과를 모델에 추가
+	    model.addAttribute("userName", userName);
+	    model.addAttribute("userChoice", userChoice);
+	    model.addAttribute("computerChoice", computerChoice);
+	    model.addAttribute("result", result);
+
+	    // 결과 페이지로 이동
+	    return "game2";
 	}
 
 	// 게임 전체 리스트 (game2-result.jsp로 DB에 저장되어 있는 게임 전체 리스트 보냄)
