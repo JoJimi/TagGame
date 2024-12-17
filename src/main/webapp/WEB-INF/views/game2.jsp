@@ -64,10 +64,18 @@ button {
 				</label>
 			</div>
 
-			<!-- 게임 시작 버튼 -->
-			<!-- 부모 요소에 text-align 적용 -->
-			<div style="text-align: right; margin-top: 20px;">
-				<button type="submit">게임 시작</button>
+			<!-- 버튼 영역 -->
+			<div
+				style="display: flex; justify-content: space-between; margin-top: 20px;">
+				<!-- 게임 시작 버튼 -->
+				<form action="/game2/play" method="post">
+					<button type="submit">게임 시작</button>
+				</form>
+
+				<!-- 게임 기록 버튼 -->
+				<form action="/game2/results" method="get">
+					<button type="submit">게임 기록</button>
+				</form>
 			</div>
 		</form>
 		<hr>

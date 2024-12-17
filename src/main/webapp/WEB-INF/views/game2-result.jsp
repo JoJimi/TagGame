@@ -1,52 +1,39 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
 <html lang="ko">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>전체 게임 결과</title>
-  <link rel="stylesheet" href="/css/style.css">
+  <title>전체 게임 기록</title>
 </head>
 <body>
-  <div class="result-container">
-    <h1>전체 게임 결과</h1>
-    <table border="1">
-      <thead>
+  <h1>전체 게임 기록</h1>
+  <table border="1">
+    <thead>
+      <tr>
+        <th>사용자 이름</th>
+        <th>사용자 선택</th>
+        <th>컴퓨터 선택</th>
+        <th>결과</th>
+        <th>날짜</th>
+      </tr>
+    </thead>
+    <tbody>
+      <c:forEach var="record" items="${results}">
         <tr>
-          <th>게임 ID</th>
-          <th>사용자 이름</th>
-          <th>사용자 선택</th>
-          <th>컴퓨터 선택</th>
-          <th>결과</th>
-          <th>게임 날짜</th>
-          <th>삭제</th>
+          <td>${record.userName}</td>
+          <td>${record.userChoice}</td>
+          <td>${record.computerChoice}</td>
+          <td>${record.result}</td>
+          <td>${record.gameDate}</td>
         </tr>
-      </thead>
-      <tbody>
-        <c:forEach var="result" items="${results}">
-          <tr>
-            <td>${result.id}</td>
-            <td>${result.userName}</td>
-            <td>${result.userChoice}</td>
-            <td>${result.computerChoice}</td>
-            <td>${result.result}</td>
-            <td>${result.gameDate}</td>
-            <td>
-              <form action="/game2/delete/${result.id}" method="post">
-                <button type="submit">삭제</button>
-              </form>
-            </td>
-          </tr>
-        </c:forEach>
-      </tbody>
-    </table>
+      </c:forEach>
+    </tbody>
+  </table>
 
-    <!-- 전체 삭제 -->
-    <form action="/game2/deleteAll" method="post">
-      <button type="submit">전체 삭제</button>
-    </form>
-
-    <a href="/game2">게임으로 돌아가기</a>
+  <!-- 게임 화면으로 돌아가기 -->
+  <div style="margin-top: 20px; text-align: center;">
+    <a href="/game2">게임 화면으로 돌아가기</a>
   </div>
 </body>
 </html>
