@@ -8,6 +8,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 
@@ -31,13 +32,21 @@ public class Game1Controller {
             players.add(true); // 모든 플레이어 생존 상태로 초기화
         }
 
-        int bulletRound = new Random().nextInt(participantCount) + 1; // 랜덤 총알 위치 결정
         int remainingBullets = participantCount; // 남은 발사 횟수는 참가자 수와 동일
 
+        // 총알 리스트 생성
+        List<Boolean> bulletList = new ArrayList<>();
+        for (int i = 0; i < remainingBullets - 1; i++) {
+            bulletList.add(false); // 빈 발사
+        }
+        bulletList.add(true); // 총알 발사
+        Collections.shuffle(bulletList); // 총알 리스트 셔플
+
+        // 모델 데이터 추가
         model.addAttribute("participantCount", participantCount);
         model.addAttribute("players", players);
-        model.addAttribute("bulletRound", bulletRound);
-        model.addAttribute("remainingBullets", remainingBullets); // 남은 발사 횟수 전달
+        model.addAttribute("bulletList", bulletList); // 셔플된 총알 리스트 전달
+        model.addAttribute("remainingBullets", remainingBullets);
         model.addAttribute("gameOver", false);
 
         return "game1-play";
@@ -47,33 +56,41 @@ public class Game1Controller {
     @PostMapping("/play/select")
     public String playGame(@RequestParam int participantCount,
                            @RequestParam int playerId,
-                           @RequestParam int bulletRound,
                            @RequestParam String players,
-                           @RequestParam int remainingBullets, // 남은 발사 횟수
+                           @RequestParam String bulletList, // JSON 문자열로 전달
+                           @RequestParam int remainingBullets,
                            Model model) throws Exception {
         ObjectMapper objectMapper = new ObjectMapper();
+
+        // players JSON 변환
         List<Boolean> playerList = objectMapper.readValue(players, new TypeReference<List<Boolean>>() {});
 
-        boolean isDead = playerId == bulletRound;
+        // bulletList JSON 변환
+        List<Boolean> bulletListConverted = objectMapper.readValue(bulletList, new TypeReference<List<Boolean>>() {});
+
+        // 현재 발사 결과 가져오기
+        boolean isDead = bulletListConverted.get(remainingBullets - 1);
 
         // 플레이어 상태 업데이트
-        playerList.set(playerId - 1, !isDead);
+        if (isDead) {
+            playerList.set(playerId - 1, false); // 해당 플레이어 죽음
+        }
 
         // 남은 발사 횟수 감소
         remainingBullets--;
 
-        // 모델에 데이터 전달
+        // 모델 데이터 갱신
         model.addAttribute("players", playerList);
         model.addAttribute("participantCount", participantCount);
-        model.addAttribute("bulletRound", bulletRound);
-        model.addAttribute("remainingBullets", remainingBullets); // 남은 발사 횟수 전달
+        model.addAttribute("bulletList", bulletListConverted); // 총알 리스트 유지
+        model.addAttribute("remainingBullets", remainingBullets);
 
         if (isDead) {
             model.addAttribute("gameOver", true);
             model.addAttribute("message", "플레이어 " + playerId + "이 총에 맞았습니다! 게임 종료!");
         } else if (remainingBullets == 0) {
             model.addAttribute("gameOver", true);
-            model.addAttribute("message", "남은 발사 횟수가 없습니다! 게임 종료!");
+            model.addAttribute("message", "총알을 맞을 사람이 없습니다! 게임 종료!");
         } else {
             model.addAttribute("gameOver", false);
         }
