@@ -109,14 +109,29 @@ public class Game6DAO {
     // 4. 모든 게임 결과 삭제 및 ID 초기화
     public void deleteAllGame6Results() throws SQLException {
         Connection conn = open();
-        String sql = "DELETE FROM game6_results; ALTER TABLE game6_results AUTO_INCREMENT = 1";
-        PreparedStatement pstmt = conn.prepareStatement(sql);
+        String deleteSql = "DELETE FROM game6_results";
+        String alterSql = "ALTER TABLE game6_results AUTO_INCREMENT = 1";
 
-        try (conn; pstmt) {
-            pstmt.executeUpdate();
+        try {
+            conn.setAutoCommit(false); // 트랜잭션 시작
+
+            try (PreparedStatement deleteStmt = conn.prepareStatement(deleteSql)) {
+                deleteStmt.executeUpdate();
+            }
+
+            try (PreparedStatement alterStmt = conn.prepareStatement(alterSql)) {
+                alterStmt.executeUpdate();
+            }
+
+            conn.commit(); // 트랜잭션 커밋
         } catch (SQLException e) {
+            conn.rollback(); // 오류 시 롤백
             e.printStackTrace();
             throw new RuntimeException("DB 에러");
+        } finally {
+            conn.setAutoCommit(true); // 원상 복구
+            conn.close();
         }
     }
+
 }

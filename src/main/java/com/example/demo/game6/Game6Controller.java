@@ -21,7 +21,7 @@ public class Game6Controller {
         this.game6Service = game6Service;
     }
 
-    // 사다리 타기 게임 실행 (game6.jsp에서 게임 결과 리스트를 받아 처리)
+    // 사다리 타기 게임 결과를 DB에 저장
     @PostMapping("/play")
     public String playGame(@RequestParam("results") List<String>[] results,
                            Model model) throws Exception {
@@ -31,9 +31,8 @@ public class Game6Controller {
             return "game6";
         }
     	
-    	List<String> gameResults = game6Service.playGame(results); // gameId는 service에서 처리
+    	game6Service.playGame(results); // gameId는 service에서 처리
 
-        model.addAttribute("gameResults", gameResults);
         return "game6"; 
     }
 
