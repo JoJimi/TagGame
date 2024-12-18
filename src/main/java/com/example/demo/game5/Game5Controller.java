@@ -17,7 +17,7 @@ public class Game5Controller {
     public Game5Controller(Game5Service game5Service) {
         this.game5Service = game5Service;
     }
-
+    
     // 1. 게임 실행 (game5.jsp로 랜덤으로 배정된 층 정보 전달)
     @PostMapping("/play")
     public String playGame(@RequestParam int participantCount, @RequestParam int winnerApartmentFloor, Model model) {

@@ -61,6 +61,12 @@
         button:hover {
             background-color: #0056b3;
         }
+        .delete-button {
+            background-color: #dc3545;
+        }
+        .delete-button:hover {
+            background-color: #c82333;
+        }
     </style>
 </head>
 <body>
@@ -106,6 +112,10 @@
                         </tr>
                     <% } %>
                 </table>
+                <!-- Delete Entire Game -->
+                <form method="post" action="/game6/delete/<%= entry.getKey() %>" style="text-align: center; margin-top: 10px;">
+                    <button type="submit" class="delete-button">이 게임 전체 삭제</button>
+                </form>
             </div>
         <% } %>
     <% } %>

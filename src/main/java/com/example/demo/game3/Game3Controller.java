@@ -16,7 +16,7 @@ public class Game3Controller {
     public Game3Controller(Game3Service game3Service) {
         this.game3Service = game3Service;
     }
-
+    
     // 게임 결과 저장 (game3.jsp로 결과 전달)
     @PostMapping("/play")
     public String playGame(@RequestParam List<String> participants, Model model) throws Exception {

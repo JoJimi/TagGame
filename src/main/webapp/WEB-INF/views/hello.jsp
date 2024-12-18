@@ -34,8 +34,8 @@
         <p class="game-title">아파트게임</p>
       </a>
       <a href="/game6" class="game-card">
-        <img src="images/ladder.png" alt="Game 6" class="game-image">
-        <p class="game-title">사다리 타기</p>
+        <img src="images/randomBox.jpg" alt="Game 6" class="game-image">
+        <p class="game-title">랜덤 박스</p>
       </a>
     </div>
   </div>

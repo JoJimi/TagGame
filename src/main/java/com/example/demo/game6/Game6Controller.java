@@ -20,18 +20,18 @@ public class Game6Controller {
     public Game6Controller(Game6Service game6Service) {
         this.game6Service = game6Service;
     }
-
-    // 사다리 타기 게임 결과를 DB에 저장
+    
+    // 랜덤박스 게임 결과를 DB에 저장
     @PostMapping("/play")
-    public String playGame(@RequestParam("results") List<String>[] results,
+    public String playGame(@RequestParam String[] startPoints, @RequestParam String[] endPoints,
                            Model model) throws Exception {
 
-    	if (results == null) {
+    	if (startPoints == null || endPoints == null) {
             model.addAttribute("error", "결과가 비어있습니다.");
             return "game6";
         }
     	
-    	game6Service.playGame(results); // gameId는 service에서 처리
+    	game6Service.playGame(startPoints, endPoints); // gameId는 service에서 처리
 
         return "game6"; 
     }

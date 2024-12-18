@@ -1,10 +1,9 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-<%@ page import="java.util.List" %>
 <!DOCTYPE html>
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
-    <title>사다리 타기 게임</title>
+    <title>랜덤 박스 게임</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -13,35 +12,29 @@
             padding: 20px;
         }
         .container {
-            max-width: 800px;
+            max-width: 100%;
             margin: 0 auto;
             background: #fff;
             border-radius: 10px;
             box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
             padding: 20px;
             text-align: center;
+            overflow-x: auto;
         }
         h1 {
             color: #007bff;
             margin-bottom: 20px;
         }
         .input-group {
-            display: flex;
-            justify-content: center;
-            align-items: center;
             margin: 10px 0;
-        }
-        .input-group span {
-            font-weight: bold;
-            margin-right: 10px;
-            color: #333;
         }
         input {
             padding: 8px;
-            margin-right: 10px;
+            margin: 5px 0;
             border: 1px solid #ccc;
             border-radius: 5px;
-            width: 120px;
+            width: 100px;
+            text-align: center;
         }
         button {
             background-color: #007bff;
@@ -51,114 +44,215 @@
             border-radius: 5px;
             cursor: pointer;
             font-size: 16px;
+            margin-top: 10px;
         }
         button:hover {
             background-color: #0056b3;
         }
-        .ladder {
-            display: none; /* 사다리 초기에는 숨김 */
+        .button-group {
+		    display: flex;
+		    justify-content: center;
+		    align-items: center;
+		    gap: 10px; /* 버튼 간격 */
+		    margin-top: 20px;
+		}
+        .ladder-container {
+            display: flex;
             justify-content: center;
-            margin: 20px 0;
+            align-items: center;
+            margin: 20px auto;
+            gap: 50px;
+            position: relative;
+        }
+        .ladder-column {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: relative;
         }
         .vertical-line {
             width: 5px;
             height: 400px;
             background: #007bff;
-            margin: 0 20px;
             position: relative;
         }
         .horizontal-line {
-            position: absolute;
             height: 5px;
-            width: 20px;
-            background: #ff5722;
+            background: #ff0000;
+            position: absolute;
+        }
+        .question-img {
+            width: 40px;
+            height: 40px;
+            position: absolute;
+            top: 50%;
             left: 50%;
-            transform: translateX(-50%);
+            transform: translate(-50%, -50%);
+        }
+        #startGameButton {
+            display: none;
+        }
+        #playGameButton {
+            display: block;
         }
         .results {
-            display: none;
-            justify-content: space-between;
             margin-top: 20px;
-        }
-        .results div {
-            font-weight: bold;
-            margin: 0 10px;
+            font-size: 18px;
         }
     </style>
     <script>
-        function startGame() {
-            document.getElementById("ladder").style.display = "flex";
-            document.getElementById("gameResults").style.display = "flex";
+        let playerCount = 0;
+        let ladderMap = [];
+        let startPoints = [];
+        let endPoints = [];
+
+        function generateLadder(count) {
+            playerCount = count;
+            ladderMap = Array.from({ length: 400 }, () => Array(count).fill(false));
+            startPoints = Array(count).fill("");
+            endPoints = Array(count).fill("");
+            
+            const ladderContainer = document.getElementById("ladder");
+            ladderContainer.innerHTML = "";
+
+            const containerWidth = ladderContainer.offsetWidth - 50;
+            const gapWidth = containerWidth / (count - 1);
+
+            for (let i = 0; i < count; i++) {
+                const ladderColumn = document.createElement("div");
+                ladderColumn.className = "ladder-column";
+                ladderColumn.style.marginLeft = i === 0 ? "0px" : `${gapWidth}px`;
+
+                const startInput = document.createElement("input");
+                startInput.type = "text";
+                startInput.placeholder = "출발지";
+                startInput.className = "start-input";
+
+                startInput.addEventListener("input", (event) => {
+                    startPoints[i] = event.target.value;
+                });
+
+                ladderColumn.appendChild(startInput);
+
+                const verticalLine = document.createElement("div");
+                verticalLine.className = "vertical-line";
+                verticalLine.dataset.column = i;
+
+                const questionImg = document.createElement("img");
+                questionImg.src = "/images/question.png";
+                questionImg.className = "question-img";
+                verticalLine.appendChild(questionImg);
+
+                ladderColumn.appendChild(verticalLine);
+
+                const endInput = document.createElement("input");
+                endInput.type = "text";
+                endInput.placeholder = "도착지";
+                endInput.className = "end-input";
+
+                endInput.addEventListener("input", (event) => {
+                    endPoints[i] = event.target.value;
+                });
+
+                ladderColumn.appendChild(endInput);
+
+                ladderContainer.appendChild(ladderColumn);
+            }
+
+            document.getElementById("startGameButton").style.display = "inline-block";
+            document.getElementById("playGameButton").style.display = "inline-block";
+            document.getElementById("results").innerHTML = "";
+        }
+
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+        }
+
+        function generateRandomBox() {
+            const startInputs = document.querySelectorAll(".start-input");
+            const endInputs = document.querySelectorAll(".end-input");
+
+            // 입력 검증
+            for (let i = 0; i < startInputs.length; i++) {
+                if (!startInputs[i].value.trim()) {
+                    alert("출발지를 입력해주세요.");
+                    return;
+                }
+                if (!endInputs[i].value.trim()) {
+                    alert("도착지를 입력해주세요.");
+                    return;
+                }
+            }
+
+            // `startPoints`와 `endPoints` 값 가져오기
+            startPoints = Array.from(startInputs).map(input => input.value.trim());
+            endPoints = Array.from(endInputs).map(input => input.value.trim());
+
+            // `endPoints` 배열 섞기
+            shuffleArray(endPoints);
+            
+            // 동적으로 `form` 생성 및 데이터 전송
+            const form = document.createElement("form");
+            form.method = "POST";
+            form.action = "/game6/play";
+
+            // `startPoints`와 `endPoints`를 폼 데이터로 추가
+            startPoints.forEach((point, index) => {
+                const inputStart = document.createElement("input");
+                inputStart.type = "hidden";
+                inputStart.name = "startPoints";
+                inputStart.value = point;
+                form.appendChild(inputStart);
+
+                const inputEnd = document.createElement("input");
+                inputEnd.type = "hidden";
+                inputEnd.name = "endPoints";
+                inputEnd.value = endPoints[index];
+                form.appendChild(inputEnd);
+            });
+
+            // 폼을 body에 추가 후 제출
+            document.body.appendChild(form);
+            form.submit();
+        }
+
+        function handleFormSubmit(event) {
+            event.preventDefault();
+            const count = parseInt(document.getElementById("playerCount").value);
+            if (isNaN(count) || count < 2 || count > 15) {
+                alert("참여자 수는 2명에서 15명 사이로 입력해주세요.");
+                return;
+            }
+            document.getElementById("startGameButton").style.display = "none";
+            document.getElementById("playGameButton").style.display = "none";
+            generateLadder(count);
         }
     </script>
 </head>
 <body>
 <div class="container">
-    <h1>사다리 타기 게임</h1>
-
-    <!-- 사용자 수 입력 -->
-    <form method="get" action="">
+    <h1>랜덤 박스 게임</h1>
+    <form onsubmit="handleFormSubmit(event)">
         <div class="input-group">
-            <span>참여자 수:</span>
-            <input type="number" name="playerCount" min="2" required placeholder="최소 2명">
+            <label for="playerCount">참여자 수:</label>
+            <input type="number" id="playerCount" min="2" max="15">
             <button type="submit">확인</button>
         </div>
     </form>
 
-    <%
-        String playerCountParam = request.getParameter("playerCount");
-        int playerCount = (playerCountParam != null) ? Integer.parseInt(playerCountParam) : 0;
+    <div id="ladder" class="ladder-container"></div>
 
-        if (playerCount > 0) {
-    %>
-    <!-- 참여자와 결과 입력 -->
-    <form method="post" action="play">
-        <h3>참여자와 결과를 입력하세요:</h3>
-        <% for (int i = 1; i <= playerCount; i++) { %>
-            <div class="input-group">
-                <span>참여자 <%= i %>:</span>
-                <input type="text" name="players" placeholder="이름" required>
-                <span>결과 <%= i %>:</span>
-                <input type="text" name="results" placeholder="결과" required>
-            </div>
-        <% } %>
-        <button type="submit">게임 시작</button>
-    </form>
-    <% } %>
-
-    <!-- 사다리 표시 -->
-    <div id="ladder" class="ladder">
-        <% if (playerCount > 0) {
-            for (int i = 0; i < playerCount; i++) { %>
-                <div class="vertical-line">
-                    <% for (int j = 0; j < 10; j++) {
-                        if (Math.random() > 0.5) { %>
-                            <div class="horizontal-line" style="top: <%= j * 40 %>px;"></div>
-                        <% } } %>
-                </div>
-        <% } } %>
+    <div class="button-group">
+        <button id="startGameButton" type="button" onclick="generateRandomBox()">랜덤 박스 생성</button>
+        <form action="/game6/results" method="get" style="display: inline;">
+            <button id="playGameButton" type="submit">게임 기록</button>
+        </form>
     </div>
 
-    <!-- 게임 결과 표시 -->
-    <form method="post" action="/game6/play">
-	    <div id="gameResults" class="results">
-	    	<h2>결과</h2>
-	    	
-	        <% 
-	            List<String> results = (List<String>) request.getAttribute("results");
-	
-	            if (results != null) {
-	                for (int i = 0; i < results.size(); i++) {
-	        %>
-	        <div>
-	            <%= results.get(i) %>
-	        </div>
-	        <%      } 
-	            }
-	        %>
-	    </div>
-    </form>
-    
+    <div id="results" class="results"></div>
 </div>
 </body>
 </html>
