@@ -18,12 +18,6 @@ public class Game2Controller {
 		this.game2Service = game2Service;
 	}
 
-	// /game2 요청 처리
-	@GetMapping
-	public String game2Page() {
-		return "game2"; // game2.jsp 반환
-	}
-
 	// 게임 결과 (game2.jsp로 게임 결과 보냄)
 	@PostMapping("/play")
 	public String playGame(@RequestParam String userName, @RequestParam String userChoice, Model model) throws Exception {

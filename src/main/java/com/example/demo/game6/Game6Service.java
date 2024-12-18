@@ -16,26 +16,18 @@ public class Game6Service {
         this.game6DAO = game6DAO;
     }
 
-    // 사다리 타기 로직
-    public List<String> playGame(List<String>[] results) throws Exception {
-        if (results == null) {
-            throw new IllegalArgumentException("결과가 비어있습니다.");
-        }
+    // 사다리 타기의 결과를 DB에 저장
+    public void playGame(String[] startPoints, String[] endPoints) throws Exception {
         int gameId = game6DAO.getCurrentGameId();  // 현재 게임 ID를 가져옴
 
-        // 사다리 타기 결과를 저장할 리스트
-        List<String> ladderResults = new ArrayList<>();
-
-        for (int i = 0; i < results[0].size(); i++) {
-            String user = results[0].get(i);
-            String result = results[1].get(i);
-            ladderResults.add(user + " -> " + result);
+        for (int i = 0; i < startPoints.length; i++) {
+            String user = startPoints[i];
+            String result = endPoints[i];
 
             // 게임 ID와 함께 결과를 데이터베이스에 저장
             game6DAO.saveGame6Result(gameId, user, result, java.time.LocalDateTime.now());
         }
 
-        return ladderResults;
     }
 
     // 전체 게임 결과 리스트
