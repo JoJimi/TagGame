@@ -3,7 +3,6 @@ body {
 	margin: 0;
 	padding: 0;
 	font-family: 'Arial', sans-serif;
-	background: linear-gradient(to bottom, #89CFF0, #ffffff);
 	display: flex;
 	justify-content: center;
 	align-items: center;
@@ -52,4 +51,22 @@ h1 {
 .game-title {
 	font-size: 18px;
 	color: #333;
+}
+
+
+/* game2 */
+.choices-row {
+  display: flex;
+  justify-content: center;
+  gap: 40px;
+  margin-top: 20px;
+}
+
+.choice {
+  text-align: center;
+}
+
+.choice-image {
+  width: auto;
+  height: 50px;
 }
