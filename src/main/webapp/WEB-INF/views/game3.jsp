@@ -35,7 +35,7 @@
 		<canvas width="300" height="300"></canvas>
 
 		<!-- 돌림판 돌리는 버튼 -->
-		<button type="button" onclick="rotate()">돌려돌려 돌림판</button>
+		<button type="button" onclick="rRotate()">돌려돌려 돌림판</button>
 
 		<!-- 이름 추가 영역 -->
 		<div id="addDiv">
@@ -59,6 +59,15 @@
         const menuAdd = document.querySelector('#menuAdd');
         const product = [];
         const colors = [];
+        const hiddenInput = document.createElement("input");
+        hiddenInput.className = "hidden-input";
+
+        // 랜덤 숫자 생성
+        const rRandom = () => {
+            const min = Math.ceil(0);
+            const max = Math.floor(product.length - 1);
+            return Math.floor(Math.random() * (max - min)) + min;
+        };
 
         // 원판 UI 생성
         const newMake = () => {
@@ -107,26 +116,41 @@
             }
         };
 
-        // 원판 회전 함수
-        const rotate = () => {
-            $c.style.transform = `initial`;
-            $c.style.transition = `initial`;
-            const alpha = Math.floor(Math.random() * 100);
+        // 룰렛 회전
+        const rRotate = () => {
+            const panel = $c;
+            const btn = document.querySelector("button[onclick='rRotate()']");
+            const deg = [];
+            const sectionAngle = 360 / product.length;
 
-            setTimeout(() => {    
-                const ran = Math.floor(Math.random() * product.length); // 랜덤 섹터 선택
-                const arc = 360 / product.length; // 섹터 각도 계산
-                const rotate = (ran * arc) + 3600 + (arc * 3) - (arc / 4) + alpha; // 회전 각도 계산
-                $c.style.transform = `rotate(-${rotate}deg)`; // 회전 적용
-                $c.style.transition = `2s`;
+            for (let i = 1, len = product.length; i <= len; i++) {
+                deg.push((360 / len) * i - 180);
+            }
 
-                // 2초 후 당첨자 표시
-                setTimeout(() => {
-                    const winnerName = product[ran];
-                    document.getElementById("winnerName").innerText = winnerName;
-                    alert(`당첨자는 ${winnerName}입니다!`);
-                }, 2000);
-            }, 1);
+            let num = 0;
+            document.body.append(hiddenInput);
+            const setNum = hiddenInput.value = rRandom();
+
+            // 애니메이션 설정
+            const ani = setInterval(() => {
+                num++;
+                panel.style.transform = "rotate(" + 360 * num + "deg)";
+                btn.disabled = true;
+                btn.style.pointerEvents = "none";
+
+                if (num === 50) {
+                    clearInterval(ani);
+                    panel.style.transform = `rotate(${deg[setNum]}deg)`;
+
+                    setTimeout(() => {
+                        const winnerName = product[setNum];
+                        document.getElementById("winnerName").innerText = winnerName;
+                        btn.disabled = false;
+                        btn.style.pointerEvents = "auto";
+                        hiddenInput.remove();
+                    }, 2000);
+                }
+            }, 50);
         };
 
         // 이름 추가
@@ -136,8 +160,7 @@
                 let r = Math.floor(Math.random() * 256);
                 let g = Math.floor(Math.random() * 256);
                 let b = Math.floor(Math.random() * 256);
-                colors.push("rgb(" + r + "," + g + "," + b + ")");
-                newMake();
+                colors.push("rgb(" + r + "," + g + "," + b + ")");                newMake();
                 menuAdd.value = "";
             } else {
                 alert("이름을 입력한 후 버튼을 클릭 해 주세요");
