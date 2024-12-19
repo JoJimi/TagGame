@@ -5,7 +5,9 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Controller
 @RequestMapping("/game3")
@@ -19,19 +21,17 @@ public class Game3Controller {
     
     // 게임 결과 저장 (game3.jsp로 결과 전달)
     @PostMapping("/play")
-    public String playGame(@RequestParam List<String> participants, Model model) throws Exception {
-    	try {
-            // 랜덤으로 당첨자 선정 및 결과 저장
+    @ResponseBody
+    public Map<String, String> playGame(@RequestBody List<String> participants) throws Exception {
+        Map<String, String> result = new HashMap<>();
+        try {
             String winnerName = game3Service.playgame(participants);
-            
-            // 모델에 당첨자와 메시지 전달
-            model.addAttribute("winnerName", winnerName);
-            model.addAttribute("message", "게임 결과가 성공적으로 저장되었습니다.");
+            result.put("winnerName", winnerName);
+            result.put("message", "게임 결과가 성공적으로 저장되었습니다.");
         } catch (Exception e) {
-            model.addAttribute("error", "게임 실행 중 오류가 발생했습니다: " + e.getMessage());
+            result.put("error", "게임 실행 중 오류: " + e.getMessage());
         }
-
-        return "game3"; // game3.jsp 화면으로 이동
+        return result;
     }
 
     // 게임 전체 결과 조회 (game3-result.jsp로 DB에 저장된 결과 전달)

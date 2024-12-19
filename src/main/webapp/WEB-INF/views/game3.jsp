@@ -8,52 +8,58 @@
 <script src="https://code.jquery.com/jquery-3.6.3.min.js"></script>
 <title>랜덤 룰렛 게임</title>
 <style>
-    body {
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-        min-height: 100vh;
-        margin: 0;
-        background-color: #f7f7f7;
-    }
-    h1 {
-        margin: 0;
-        padding: 20px;
-        font-size: 24px;
-        text-align: center;
-    }
-    #menu {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        text-align: center;
-        position: relative;
-    }
-    canvas {
-        margin-top: 20px;
-        transition: transform 2s ease-out; /* 부드러운 회전 효과 */
-    }
-    button {
-        margin-top: 10px;
-        padding: 10px 20px;
-        background-color: #febf00;
-        border: none;
-        border-radius: 5px;
-        font-size: 16px;
-        font-weight: bold;
-        cursor: pointer;
-    }
-    button:active {
-        background-color: #444;
-        color: #fff;
-    }
-    .hidden-input {
-    display: none; /* 완전히 숨김 */
-    visibility: hidden; /* 요소 가시성 제거 */
-    position: absolute; /* 화면에서 벗어나게 배치 */
-    top: -9999px;
-    left: -9999px;
+body {
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	min-height: 100vh;
+	margin: 0;
+	background-color: #f7f7f7;
+}
+
+h1 {
+	margin: 0;
+	padding: 20px;
+	font-size: 24px;
+	text-align: center;
+}
+
+#menu {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	text-align: center;
+	position: relative;
+}
+
+canvas {
+	margin-top: 20px;
+	transition: transform 2s ease-out; /* 부드러운 회전 효과 */
+}
+
+button {
+	margin-top: 10px;
+	padding: 10px 20px;
+	background-color: #febf00;
+	border: none;
+	border-radius: 5px;
+	font-size: 16px;
+	font-weight: bold;
+	cursor: pointer;
+}
+
+button:active {
+	background-color: #444;
+	color: #fff;
+}
+
+.hidden-input {
+	display: none; /* 완전히 숨김 */
+	visibility: hidden; /* 요소 가시성 제거 */
+	position: absolute; /* 화면에서 벗어나게 배치 */
+	top: -9999px;
+	left: -9999px;
 }
 </style>
 </head>
@@ -75,9 +81,16 @@
 		<!-- 결과 표시 -->
 		<div id="result">
 			<h2>
-				당첨자:
-				<span id="winnerName"></span>
+				당첨자: <span id="winnerName"></span>
 			</h2>
+		</div>
+
+		<!-- 결과 조회 버튼 -->
+		<div style="text-align: center; margin-top: 20px;">
+			<form method="get"
+				action="${pageContext.request.contextPath}/game3/results">
+				<button type="submit">결과 조회</button>
+			</form>
 		</div>
 	</div>
 
@@ -187,6 +200,25 @@
 
                     setTimeout(() => {
                     	alert("당첨 완료!");
+                    	
+                    	// AJAX 요청으로 당첨 결과 저장
+                        $.ajax({
+                            url: '/game3/play',
+                            type: 'POST',
+                            contentType: 'application/json',
+                            data: JSON.stringify(product),
+                            success: (response) => {
+                                alert("게임 결과가 저장되었습니다!");
+                            },
+                            error: (xhr, status, error) => {
+                                alert("게임 결과 저장 중 오류가 발생했습니다: " + error);
+                            },
+                            complete: () => {
+                                btn.disabled = false; // 버튼 다시 활성화
+                            }
+                        });
+                    	
+                    	
                         const winnerName = product[setNum];
                         document.getElementById("winnerName").innerText = winnerName;
                         btn.disabled = false;
