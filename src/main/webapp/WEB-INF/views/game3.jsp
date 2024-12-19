@@ -8,6 +8,28 @@
 <script src="https://code.jquery.com/jquery-3.6.3.min.js"></script>
 <title>랜덤 룰렛 게임</title>
 <style>
+    body {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+        margin: 0;
+        background-color: #f7f7f7;
+    }
+    h1 {
+        margin: 0;
+        padding: 20px;
+        font-size: 24px;
+        text-align: center;
+    }
+    #menu {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        position: relative;
+    }
     canvas {
         margin-top: 20px;
         transition: transform 2s ease-out; /* 부드러운 회전 효과 */
@@ -26,12 +48,19 @@
         background-color: #444;
         color: #fff;
     }
+    .hidden-input {
+    display: none; /* 완전히 숨김 */
+    visibility: hidden; /* 요소 가시성 제거 */
+    position: absolute; /* 화면에서 벗어나게 배치 */
+    top: -9999px;
+    left: -9999px;
+}
 </style>
 </head>
 <body>
 	<h1>랜덤 룰렛 게임</h1>
 	<div id="menu">
-		<!-- 돌림판 캔버스 -->
+		<!-- 룰렛 캔버스 -->
 		<canvas width="300" height="300"></canvas>
 
 		<!-- 돌림판 돌리는 버튼 -->
@@ -46,7 +75,7 @@
 		<!-- 결과 표시 -->
 		<div id="result">
 			<h2>
-				당첨자: 
+				당첨자:
 				<span id="winnerName"></span>
 			</h2>
 		</div>
@@ -123,13 +152,27 @@
             const deg = [];
             const sectionAngle = 360 / product.length;
 
+         // deg 배열 생성
             for (let i = 1, len = product.length; i <= len; i++) {
-                deg.push((360 / len) * i - 180);
+            	deg.push((360 / len) * i - 180);
             }
 
             let num = 0;
+            
+         // 기존 hiddenInput 삭제 후 재생성
+            if (document.body.contains(hiddenInput)) {
+                hiddenInput.remove();
+            }
             document.body.append(hiddenInput);
-            const setNum = hiddenInput.value = rRandom();
+
+            const setNum = Math.floor(Math.random() * product.length); // 랜덤 섹터 선택
+            const rotateAngle = 3600 + deg[setNum]; // 회전 각도 설정
+
+            if (setNum === -1) return; // 항목이 없을 경우 종료
+
+            panel.style.transform = `rotate(${rotateAngle}deg)`;
+            panel.style.transition = "transform 2s ease-out";
+            btn.disabled = true;
 
             // 애니메이션 설정
             const ani = setInterval(() => {
@@ -143,6 +186,7 @@
                     panel.style.transform = `rotate(${deg[setNum]}deg)`;
 
                     setTimeout(() => {
+                    	alert("당첨 완료!");
                         const winnerName = product[setNum];
                         document.getElementById("winnerName").innerText = winnerName;
                         btn.disabled = false;
