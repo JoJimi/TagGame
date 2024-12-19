@@ -95,19 +95,19 @@
                     <tr>
                         <th>참여자 수</th>
                         <th>당첨 아파트 층</th>
-                        <th>당첨 사용자 번호</th>
+                        <th>당첨 사용자</th>
                         <th>게임 시작 시간</th>
                     </tr>
                     <tr>
-                        <td><%= result.getParticipantCount() %></td>
-                        <td><%= result.getWinnerApartmentFloor() %></td>
-                        <td><%= result.getWinnerUserNumber() %></td>
+                        <td><%= result.getParticipantCount() + "명" %></td>
+                        <td><%= result.getWinnerApartmentFloor() + "층" %></td>
+                        <td><%= "사용자 " + result.getWinnerUserNumber() %></td>
                         <td><%= result.getGameDate().format(formatter) %></td>
                     </tr>
                 </table>
                 <!-- Delete Entire Game -->
                 <form method="post" action="/game5/delete/<%= result.getId() %>" style="text-align: center; margin-top: 10px;">
-                    <button type="submit" class="delete-button">이 게임 전체 삭제</button>
+                    <button type="submit" class="delete-button">이 게임 삭제</button>
                 </form>
             </div>
         <% } %>

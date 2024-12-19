@@ -7,82 +7,113 @@
     <title>게임 실행 결과</title>
     <style>
         body {
-            font-family: 'Comic Sans MS', Arial, sans-serif;
+            font-family: 'Press Start 2P', 'Comic Sans MS', Arial, sans-serif;
             margin: 0;
             padding: 0;
-            background: linear-gradient(135deg, #1e3c72, #2a5298);
-            color: #fff;
-            text-shadow: 0 1px 3px rgba(0, 0, 0, 0.6);
+            background: linear-gradient(135deg, #89cff0, #b0e0e6);
+            color: #000;
+            text-shadow: 0 1px 3px rgba(255, 255, 255, 0.8);
         }
         h1 {
             text-align: center;
-            color: #ffd700;
+            color: #ffdf00;
             font-size: 3em;
             margin-top: 20px;
+            animation: glow 1s infinite alternate;
+        }
+        @keyframes glow {
+            from {
+                text-shadow: 0 0 10px #ffdf00, 0 0 20px #ffdf00, 0 0 30px #ffdf00;
+            }
+            to {
+                text-shadow: 0 0 20px #f0e68c, 0 0 30px #f0e68c, 0 0 40px #f0e68c;
+            }
         }
         .result {
             max-width: 800px;
             margin: 20px auto;
             padding: 20px;
-            background: rgba(0, 0, 0, 0.8);
-            border-radius: 12px;
-            box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 15px;
+            box-shadow: 0 0 30px rgba(0, 0, 0, 0.3);
         }
         .winner {
-            color: #32cd32;
             font-weight: bold;
-            text-shadow: 0 1px 4px rgba(50, 205, 50, 0.8);
+            text-shadow: 0 1px 4px rgba(255, 160, 122, 0.8);
         }
         .floor-table {
             margin: 20px 0;
             border-collapse: collapse;
             width: 100%;
-            color: #000;
-            background: #fdfd96;
+            background: rgba(255, 255, 255, 0.95);
             border-radius: 8px;
             overflow: hidden;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+            animation: slide-in 1s ease-in-out;
+        }
+        @keyframes slide-in {
+            from {
+                opacity: 0;
+                transform: translateY(-50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
         .floor-table th, .floor-table td {
             border: 1px solid #ccc;
-            padding: 10px;
+            padding: 15px;
             text-align: center;
         }
         .floor-table th {
-            background: #ff4500;
-            color: white;
+            background: #ffb347;
+            color: #000;
             font-size: 1.2em;
         }
         .floor-table tr:nth-child(even) {
-            background: #f7f7f7;
+            background: #fdfd96;
         }
         .floor-table tr:hover {
-            background: #ffd700;
+            background: #ffe4b5;
+            color: #000;
         }
         .button-container {
             text-align: center;
             margin-top: 20px;
         }
         .button-container button {
-            padding: 10px 25px;
-            background: linear-gradient(45deg, #6a11cb, #2575fc);
-            color: #fff;
+            padding: 15px 30px;
+            background: linear-gradient(45deg, #f4a460, #ffa07a);
+            color: #000;
             border: none;
-            border-radius: 50px;
-            font-size: 1.1em;
+            border-radius: 25px;
+            font-size: 1.2em;
             cursor: pointer;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
-            transition: all 0.3s;
-            margin: 0 15px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            transition: transform 0.3s, box-shadow 0.3s;
         }
         .button-container button:hover {
-            background: linear-gradient(45deg, #ff6a00, #ee0979);
-            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.5);
+            transform: translateY(-5px);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.4);
+        }
+        .winner-row {
+            background: linear-gradient(90deg, #ffcccb, #fdfd96);
+            color: #ff0000;
+            font-weight: bold;
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse {
+            0%, 100% {
+                box-shadow: 0 0 10px rgba(255, 223, 0, 0.6);
+            }
+            50% {
+                box-shadow: 0 0 20px rgba(255, 223, 0, 0.8);
+            }
         }
     </style>
 </head>
 <body>
-    <h1>게임 실행 결과</h1>
+    <h1>🎮 게임 실행 결과 🎮</h1>
 
     <div class="result">
         <p><strong>참여자 수:</strong> ${participantCount}</p>
@@ -102,8 +133,8 @@
         <table class="floor-table">
             <thead>
                 <tr>
-                    <th>층 번호</th>
-                    <th>참여자 이름</th>
+                    <th>층</th>
+                    <th>참여자</th>
                 </tr>
             </thead>
             <tbody>
@@ -113,7 +144,7 @@
                         List<Integer> participants = entry.getValue();
                         boolean isWinnerFloor = (floor == winnerApartmentFloor);
                 %>
-                <tr class="<%= isWinnerFloor ? "winner" : "" %>">
+                <tr class="<%= isWinnerFloor ? "winner-row" : "" %>">
                     <td><%= floor %>층</td>
                     <td>
                         <% for (int participant : participants) { %>
@@ -127,10 +158,10 @@
 
         <div class="button-container">
             <form action="/game5" method="get" style="display: inline;">
-                <button>다시 하기</button>
+                <button>🔄 다시 하기</button>
             </form>
             <form action="/game5/results" method="get" style="display: inline;">
-                <button>게임 기록</button>
+                <button>📜 게임 기록</button>
             </form>
         </div>
     </div>
