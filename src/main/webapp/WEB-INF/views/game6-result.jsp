@@ -98,14 +98,12 @@
             <div class="panel">
                 <table>
                     <tr>
-                        <th>ID</th>
                         <th>참여자</th>
                         <th>결과</th>
                         <th>날짜</th>
                     </tr>
                     <% for (Game6Result result : entry.getValue()) { %>
                         <tr>
-                            <td><%= result.getId() %></td>
                             <td><%= result.getName() %></td>
                             <td><%= result.getContent() %></td>
                             <td><%= result.getGameDate().format(formatter) %></td>
