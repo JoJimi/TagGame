@@ -19,9 +19,9 @@ public class Game1Controller {
     private final Random random = new Random();
 
     // 1. 참가자 수 입력 화면
-    @GetMapping
+    @GetMapping("/start")
     public String showGamePage() {
-        return "game1"; // game1.jsp를 반환
+        return "game1Page"; // View 이름
     }
 
     // 2. 게임 시작 (참가자 수를 받아 원탁 UI 생성)
