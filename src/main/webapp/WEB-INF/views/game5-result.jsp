@@ -79,31 +79,28 @@
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
     %>
 
-    <% if (results == null || results.isEmpty()) { %>
+    <% if (results.isEmpty()) { %>
         <p style="text-align: center; font-size: 16px;">저장된 게임 결과가 없습니다.</p>
     <% } else { %>
-        <% for (Map.Entry<Integer, List<Game5Result>> entry : groupedResults.entrySet()) { %>
-            <!-- Accordion Button for Each Game ID -->
-            <button class="accordion">게임 ID: <%= entry.getKey() %></button>
+        <% for (Game5Result result : results) { %>
+            <button class="accordion">게임 ID: <%= result.getId() %></button>
             <div class="panel">
                 <table>
                     <tr>
-		                <th>참여자 수</th>
-		                <th>당첨 아파트 층</th>
-		                <th>당첨 사용자 번호</th>
-		                <th>게임 시작 시간</th>
-		            </tr>
-		            <% for (Game5Result result : results) { %>
-		                <tr>
-		                    <td><%= result.getParticipantCount() %></td>
-		                    <td><%= result.getWinnerApartmentFloor() %></td>
-		                    <td><%= result.getWinnerUserNumber() %></td>
-		                    <td><%= result.getGameStartTime().format(formatter) %></td>
-		                </tr>
-                    <% } %>
+                        <th>참여자 수</th>
+                        <th>당첨 아파트 층</th>
+                        <th>당첨 사용자 번호</th>
+                        <th>게임 시작 시간</th>
+                    </tr>
+                    <tr>
+                        <td><%= result.getParticipantCount() %></td>
+                        <td><%= result.getWinnerApartmentFloor() %></td>
+                        <td><%= result.getWinnerUserNumber() %></td>
+                        <td><%= result.getGameDate().format(formatter) %></td>
+                    </tr>
                 </table>
                 <!-- Delete Entire Game -->
-                <form method="post" action="/game6/delete/<%= entry.getKey() %>" style="text-align: center; margin-top: 10px;">
+                <form method="post" action="/game5/delete/<%= result.getId() %>" style="text-align: center; margin-top: 10px;">
                     <button type="submit" class="delete-button">이 게임 전체 삭제</button>
                 </form>
             </div>
@@ -111,31 +108,15 @@
     <% } %>
 
     <!-- 모든 결과 삭제 -->
-    <form method="post" action="/game6/deleteAll" style="text-align: center; margin-top: 20px;">
+    <form method="post" action="/game5/deleteAll" style="text-align: center; margin-top: 20px;">
         <button type="submit">모든 게임 결과 삭제</button>
     </form>
 
     <!-- 돌아가기 -->
-	<div style="text-align: center; margin-top: 10px;">
-	    <form method="get" action="${pageContext.request.contextPath}/game6">
-	        <button type="submit">돌아가기</button>
-	    </form>
-	</div>
-
-    <!-- Accordion Script -->
-    <script>
-        const acc = document.getElementsByClassName("accordion");
-        for (let i = 0; i < acc.length; i++) {
-            acc[i].addEventListener("click", function() {
-                this.classList.toggle("active");
-                const panel = this.nextElementSibling;
-                if (panel.style.display === "block") {
-                    panel.style.display = "none";
-                } else {
-                    panel.style.display = "block";
-                }
-            });
-        }
-    </script>
+    <div style="text-align: center; margin-top: 10px;">
+        <form method="get" action="${pageContext.request.contextPath}/game6">
+            <button type="submit">돌아가기</button>
+        </form>
+    </div>
 </body>
 </html>

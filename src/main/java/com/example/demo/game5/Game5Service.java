@@ -2,6 +2,7 @@ package com.example.demo.game5;
 
 import org.springframework.stereotype.Service;
 
+import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.util.*;
 
@@ -14,7 +15,7 @@ public class Game5Service {
         this.game5DAO = game5DAO;
     }
 
-    public Map<Integer, List<Integer>> playGame(int participantCount, int winnerApartmentFloor) {
+    public Map<Integer, List<Integer>> playGame(int participantCount, int winnerApartmentFloor) throws Exception {
         int totalFloors = participantCount * 2; // 총 아파트 층 수
         
         Map<Integer, List<Integer>> participantFloors = new HashMap<>(); // 참여자와 층수 매핑
@@ -45,17 +46,17 @@ public class Game5Service {
     }
 
     // 2. 모든 게임 결과 조회
-    public List<Game5Result> getGameResults() {
+    public List<Game5Result> getGameResults() throws Exception {
         return game5DAO.getAllGame5Results();
     }
 
     // 3. 모든 게임 결과 삭제
-    public void deleteAllGameResults() {
+    public void deleteAllGameResults() throws SQLException {
         game5DAO.deleteAllGame5Results();
     }
 
     // 4. 특정 게임 결과 삭제
-    public void deleteGameResult(int id) {
+    public void deleteGameResult(int id) throws Exception {
         game5DAO.delGame5Result(id);
     }
 }
