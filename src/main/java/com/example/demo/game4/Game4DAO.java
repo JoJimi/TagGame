@@ -67,15 +67,29 @@ public class Game4DAO {
     }
     
     public void deleteAllGame4Results() throws Exception {
-        Connection conn = open();
-        String sql = "DELETE FROM game4_results; ALTER TABLE game4_results AUTO_INCREMENT = 1";
-        PreparedStatement pstmt = conn.prepareStatement(sql);
+    	Connection conn = open();
+        String deleteSql = "DELETE FROM game4_results";
+        String alterSql = "ALTER TABLE game4_results AUTO_INCREMENT = 1";
 
-        try (conn; pstmt) {
-            pstmt.executeUpdate();
+        try {
+            conn.setAutoCommit(false); // 트랜잭션 시작
+
+            try (PreparedStatement deleteStmt = conn.prepareStatement(deleteSql)) {
+                deleteStmt.executeUpdate();
+            }
+
+            try (PreparedStatement alterStmt = conn.prepareStatement(alterSql)) {
+                alterStmt.executeUpdate();
+            }
+
+            conn.commit(); // 트랜잭션 커밋
         } catch (SQLException e) {
+            conn.rollback(); // 오류 시 롤백
             e.printStackTrace();
             throw new RuntimeException("DB 에러");
+        } finally {
+            conn.setAutoCommit(true); // 원상 복구
+            conn.close();
         }
     }
     
