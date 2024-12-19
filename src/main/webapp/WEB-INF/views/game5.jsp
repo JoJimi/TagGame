@@ -6,51 +6,71 @@
     <title>아파트 게임</title>
     <style>
         body {
-            font-family: Arial, sans-serif;
+            font-family: 'Comic Sans MS', cursive, sans-serif;
             margin: 20px;
-            background-color: #f4f4f9;
+            background-color: #f0f8ff;
             color: #333;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .game-container {
+            width: 100%;
+            max-width: 500px;
+            background: linear-gradient(135deg, #ffcccb, #87ceeb);
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            text-align: center;
         }
         h1 {
-            text-align: center;
-            color: #007bff;
+            font-size: 2.5em;
+            color: #ff4500;
+            margin-bottom: 20px;
+        }
+        p {
+            font-size: 1.1em;
+            margin-bottom: 20px;
+            color: #555;
         }
         form {
-            max-width: 400px;
-            margin: 20px auto;
-            background: #fff;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            margin-top: 20px;
         }
         label {
             display: block;
-            margin-bottom: 8px;
             font-weight: bold;
+            font-size: 1.2em;
+            margin-bottom: 8px;
         }
         input[type="number"] {
             width: 95%;
-            padding: 10px;
+            padding: 12px;
+            font-size: 1em;
+            border: 2px solid #ccc;
+            border-radius: 6px;
             margin-bottom: 20px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
         }
         button {
             width: 100%;
-            padding: 10px;
-            background-color: #007bff;
+            padding: 15px;
+            font-size: 1.2em;
             color: white;
+            background: #ff4500;
             border: none;
-            border-radius: 4px;
-            font-size: 16px;
+            border-radius: 6px;
             cursor: pointer;
+            transition: background-color 0.3s ease;
         }
         button:hover {
-            background-color: #0056b3;
+            background: #e63900;
         }
-        .link-container {
-            text-align: center;
-            margin-top: 20px;
+        .secondary-button {
+            margin-top: 10px;
+            background: #007bff;
+        }
+        .secondary-button:hover {
+            background: #0056b3;
         }
     </style>
     <script>
@@ -80,21 +100,22 @@
     </script>
 </head>
 <body>
-    <h1>아파트 게임 실행</h1>
+    <div class="game-container">
+        <h1>🏢 아파트 게임</h1>
+        <p>사용자 수와 당첨 층 수를 입력하고 게임을 시작하세요!</p>
 
-    <form action="/game5/play" method="post">
-        <label for="participantCount">사용자 수:</label>
-        <input type="number" id="participantCount" name="participantCount" min="2" max="15"  placeholder="참여할 사용자 수를 입력하세요" required>
+        <form action="/game5/play" method="post">
+            <label for="participantCount">👥 사용자 수:</label>
+            <input type="number" id="participantCount" name="participantCount" min="2" max="15" placeholder="2 ~ 15명의 사용자 수 입력" required>
 
-        <label for="winnerApartmentFloor">당첨 아파트 층 수:</label>
-        <input type="number" id="winnerApartmentFloor" name="winnerApartmentFloor" min="1" placeholder="당첨 층 수를 입력하세요" required>
+            <label for="winnerApartmentFloor">🎯 당첨 아파트 층 수:</label>
+            <input type="number" id="winnerApartmentFloor" name="winnerApartmentFloor" min="1" placeholder="당첨 층 수 입력" required>
 
-        <button type="submit">게임 실행</button>
-    </form>
+            <button type="submit">🚀 게임 시작</button>
+        </form>
 
-    <div class="link-container">
         <form action="/game5/results" method="get">
-            <button type="submit">게임 기록</button>
+            <button type="submit" class="secondary-button">📜 게임 기록 보기</button>
         </form>
     </div>
 </body>

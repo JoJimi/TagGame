@@ -67,6 +67,12 @@
         .delete-button:hover {
             background-color: #c82333;
         }
+        .button-container {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 20px;
+        }
     </style>
 </head>
 <body>
@@ -118,17 +124,15 @@
         <% } %>
     <% } %>
 
-    <!-- 모든 결과 삭제 -->
-    <form method="post" action="/game6/deleteAll" style="text-align: center; margin-top: 20px;">
-        <button type="submit">모든 게임 결과 삭제</button>
-    </form>
-
-    <!-- 돌아가기 -->
-	<div style="text-align: center; margin-top: 10px;">
-	    <form method="get" action="${pageContext.request.contextPath}/game6">
-	        <button type="submit">돌아가기</button>
-	    </form>
-	</div>
+    <!-- 모든 결과 삭제와 돌아가기 버튼 -->
+    <div class="button-container">
+        <form method="post" action="/game6/deleteAll">
+            <button type="submit">모든 게임 결과 삭제</button>
+        </form>
+        <form method="get" action="${pageContext.request.contextPath}/game6">
+            <button type="submit">돌아가기</button>
+        </form>
+    </div>
 
     <!-- Accordion Script -->
     <script>

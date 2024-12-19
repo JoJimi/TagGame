@@ -27,15 +27,15 @@ public class Game5Controller {
         // 참여자 번호 당 배정받은 층 수를 model에 저장해서 넘겨준다.
         model.addAttribute("participantFloors", participantFloors);
         model.addAttribute("participantCount", participantCount);
+        model.addAttribute("winnerApartmentFloor", winnerApartmentFloor);
 
-        return "game5"; 
+        return "game5-play"; 
     }
 
     // 2. 모든 게임 결과 조회 (game5-result.jsp로 결과 전달)
     @GetMapping("/results")
     public String showResults(Model model) throws Exception {
         List<Game5Result> results = game5Service.getGameResults();
-
         model.addAttribute("results", results);
 
         return "game5-result"; // 모든 게임 결과를 보여줄 JSP
