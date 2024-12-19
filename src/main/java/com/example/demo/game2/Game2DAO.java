@@ -59,7 +59,6 @@ public class Game2DAO {
 		try (conn; pstmt; rs) {
             while (rs.next()) {
                 Game2Result gameResult = new Game2Result();
-                gameResult.setId(rs.getInt("id"));
                 gameResult.setUserName(rs.getString("user_name"));
                 gameResult.setUserChoice(rs.getString("user_choice"));
                 gameResult.setComputerChoice(rs.getString("computer_choice"));
@@ -98,10 +97,7 @@ public class Game2DAO {
 			 if(pstmt.executeUpdate() == 0) {
 				 throw new SQLException("DB 에러");
 			 }
-		 } catch (SQLException e) {
-             e.printStackTrace();
-             throw new RuntimeException("DB 에러");
-         }
+		 }
 	}
     
 }
