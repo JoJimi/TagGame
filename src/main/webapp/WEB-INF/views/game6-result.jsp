@@ -118,7 +118,7 @@
                 </table>
                 <!-- Delete Entire Game -->
                 <form method="post" action="/game6/delete/<%= entry.getKey() %>" style="text-align: center; margin-top: 10px;">
-                    <button type="submit" class="delete-button">이 게임 전체 삭제</button>
+                    <button type="submit" class="delete-button">이 게임 삭제</button>
                 </form>
             </div>
         <% } %>
