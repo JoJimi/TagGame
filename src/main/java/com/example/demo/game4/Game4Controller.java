@@ -11,8 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import com.example.demo.game2.Game2Result;
-import com.example.demo.game2.Game2Service;
+
 
 @Controller
 @RequestMapping("/game4")
@@ -22,6 +21,12 @@ public class Game4Controller {
 
     public Game4Controller(Game4Service game4Service) {
         this.game4Service = game4Service;
+    }
+    
+    @PostMapping("/start")
+    public String startGame(@RequestParam List<String> players, Model model) {
+        model.addAttribute("players", players);
+        return "game4-play"; // game4-play.jsp로 이동
     }
     
     // 게임 결과 (game2.jsp로 게임 결과 보냄)
