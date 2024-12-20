@@ -72,29 +72,27 @@ public class Game3DAO {
 
     // 게임 결과 전체 삭제
     public void deleteAllGame3Results() throws Exception {
-    	Connection conn = open();
+        Connection conn = open();
         String deleteSql = "DELETE FROM game3_results";
-        String alterSql = "ALTER TABLE game3_results AUTO_INCREMENT = 1";
+        String resetAutoIncrementSql = "ALTER TABLE game3_results AUTO_INCREMENT = 1";
 
-        try {
-            conn.setAutoCommit(false); // 트랜잭션 시작
+        try (PreparedStatement deleteStmt = conn.prepareStatement(deleteSql);
+             PreparedStatement resetStmt = conn.prepareStatement(resetAutoIncrementSql)) {
 
-            try (PreparedStatement deleteStmt = conn.prepareStatement(deleteSql)) {
-                deleteStmt.executeUpdate();
-            }
+            // DELETE 실행
+            deleteStmt.executeUpdate();
 
-            try (PreparedStatement alterStmt = conn.prepareStatement(alterSql)) {
-                alterStmt.executeUpdate();
-            }
-
-            conn.commit(); // 트랜잭션 커밋
+            // AUTO_INCREMENT 리셋
+            resetStmt.executeUpdate();
+          
         } catch (SQLException e) {
             conn.rollback(); // 오류 시 롤백
             e.printStackTrace();
-            throw new RuntimeException("DB 에러");
+            throw new RuntimeException("DB 에러: " + e.getMessage());
         } finally {
-            conn.setAutoCommit(true); // 원상 복구
-            conn.close();
+            if (conn != null) {
+                conn.close();
+            }
         }
     }
 
