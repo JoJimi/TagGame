@@ -84,7 +84,9 @@ public class Game3DAO {
 
             // AUTO_INCREMENT 리셋
             resetStmt.executeUpdate();
+          
         } catch (SQLException e) {
+            conn.rollback(); // 오류 시 롤백
             e.printStackTrace();
             throw new RuntimeException("DB 에러: " + e.getMessage());
         } finally {

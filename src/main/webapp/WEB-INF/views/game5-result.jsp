@@ -1,7 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ page import="java.util.*" %>
 <%@ page import="java.time.format.DateTimeFormatter" %>
-<%@ page import="com.example.demo.game6.Game6Result" %>
+<%@ page import="com.example.demo.game5.Game5Result" %>
 <!DOCTYPE html>
 <html lang="ko">
 <head>
@@ -79,45 +79,34 @@
     <h1>이전 게임 결과</h1>
 
     <%
-        List<Game6Result> results = (List<Game6Result>) request.getAttribute("results");
-
-        // 게임 ID 별로 결과를 그룹화
-        Map<Integer, List<Game6Result>> groupedResults = new LinkedHashMap<>();
-        if (results != null) {
-            for (Game6Result result : results) {
-                groupedResults
-                    .computeIfAbsent(result.getGameId(), k -> new ArrayList<>())
-                    .add(result);
-            }
-        }
+        List<Game5Result> results = (List<Game5Result>) request.getAttribute("results");
 
         // 날짜 포맷 설정
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
     %>
 
-    <% if (groupedResults.isEmpty()) { %>
+    <% if (results.isEmpty()) { %>
         <p style="text-align: center; font-size: 16px;">저장된 게임 결과가 없습니다.</p>
     <% } else { %>
-        <% for (Map.Entry<Integer, List<Game6Result>> entry : groupedResults.entrySet()) { %>
-            <!-- Accordion Button for Each Game ID -->
-            <button class="accordion">게임 ID: <%= entry.getKey() %></button>
+        <% for (Game5Result result : results) { %>
+            <button class="accordion">게임 ID: <%= result.getId() %></button>
             <div class="panel">
                 <table>
                     <tr>
-                        <th>참여자</th>
-                        <th>결과</th>
-                        <th>날짜</th>
+                        <th>참여자 수</th>
+                        <th>당첨 아파트 층</th>
+                        <th>당첨 사용자</th>
+                        <th>게임 시작 시간</th>
                     </tr>
-                    <% for (Game6Result result : entry.getValue()) { %>
-                        <tr>
-                            <td><%= result.getName() %></td>
-                            <td><%= result.getContent() %></td>
-                            <td><%= result.getGameDate().format(formatter) %></td>
-                        </tr>
-                    <% } %>
+                    <tr>
+                        <td><%= result.getParticipantCount() + "명" %></td>
+                        <td><%= result.getWinnerApartmentFloor() + "층" %></td>
+                        <td><%= "사용자 " + result.getWinnerUserNumber() %></td>
+                        <td><%= result.getGameDate().format(formatter) %></td>
+                    </tr>
                 </table>
                 <!-- Delete Entire Game -->
-                <form method="post" action="/game6/delete/<%= entry.getKey() %>" style="text-align: center; margin-top: 10px;">
+                <form method="post" action="/game5/delete/<%= result.getId() %>" style="text-align: center; margin-top: 10px;">
                     <button type="submit" class="delete-button">이 게임 삭제</button>
                 </form>
             </div>
@@ -126,15 +115,14 @@
 
     <!-- 모든 결과 삭제와 돌아가기 버튼 -->
     <div class="button-container">
-        <form method="post" action="/game6/deleteAll">
+        <form method="post" action="/game5/deleteAll">
             <button type="submit">모든 게임 결과 삭제</button>
         </form>
-        <form method="get" action="${pageContext.request.contextPath}/game6">
+        <form method="get" action="${pageContext.request.contextPath}/game5">
             <button type="submit">돌아가기</button>
         </form>
     </div>
 
-    <!-- Accordion Script -->
     <script>
         const acc = document.getElementsByClassName("accordion");
         for (let i = 0; i < acc.length; i++) {

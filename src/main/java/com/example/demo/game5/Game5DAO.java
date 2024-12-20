@@ -13,6 +13,8 @@ import javax.sql.DataSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import com.example.demo.game6.Game6Result;
+
 @Repository
 public class Game5DAO {
 
@@ -29,9 +31,9 @@ public class Game5DAO {
     }
 
     // 1. 게임 결과 저장
-    public void saveGame5Result(int participantCount, int winnerApartmentFloor, int winnerUserNumber) {
+    public void saveGame5Result(int participantCount, int winnerApartmentFloor, int winnerUserNumber) throws Exception {
         Connection conn = open();
-        String sql = "INSERT INTO game5_results (participant_count, winner_apartment_floor, winner_user_number, game_start_time) VALUES (?, ?, ?, ?)";
+        String sql = "INSERT INTO game5_results (participant_count, winner_apartment_floor, winner_user_number, game_date) VALUES (?, ?, ?, ?)";
         try (conn; PreparedStatement pstmt = conn.prepareStatement(sql)) {
             pstmt.setInt(1, participantCount);
             pstmt.setInt(2, winnerApartmentFloor);
@@ -40,49 +42,37 @@ public class Game5DAO {
             pstmt.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
-            throw new RuntimeException("DB 저장 중 에러 발생");
         }
         
     }
 
     // 2. 모든 게임 결과 조회
-    public List<Game5Result> getAllGame5Results() {
+    public List<Game5Result> getAllGame5Results() throws Exception {
         Connection conn = open();
-        String sql = "SELECT id, participant_count, winner_apartment_floor, winner_user_number, game_start_time FROM game5_results ORDER BY game_start_time DESC";
+        String sql = "SELECT id, participant_count, winner_apartment_floor, winner_user_number, game_date FROM game5_results ORDER BY game_date DESC";
+        PreparedStatement pstmt = conn.prepareStatement(sql);
+        
+        ResultSet rs = pstmt.executeQuery();
         List<Game5Result> results = new ArrayList<>();
 
-        try (conn; PreparedStatement pstmt = conn.prepareStatement(sql); ResultSet rs = pstmt.executeQuery()) {
+        try (conn; pstmt; rs) {
             while (rs.next()) {
                 Game5Result result = new Game5Result();
                 result.setId(rs.getInt("id"));
                 result.setParticipantCount(rs.getInt("participant_count"));
                 result.setWinnerApartmentFloor(rs.getInt("winner_apartment_floor"));
                 result.setWinnerUserNumber(rs.getInt("winner_user_number"));
-                result.setGameStartTime(rs.getTimestamp("game_start_time").toLocalDateTime());
+                result.setGameDate(rs.getTimestamp("game_date").toLocalDateTime());
                 results.add(result);
             }
         } catch (SQLException e) {
             e.printStackTrace();
-            throw new RuntimeException("DB 조회 중 에러 발생");
         }
         return results;
     }
 
-    // 3. 모든 게임 결과 삭제
-    public void deleteAllGame5Results() {
-        Connection conn = open();
-        String sql = "DELETE FROM game5_results; ALTER TABLE game5_results AUTO_INCREMENT = 1";
-
-        try (conn; PreparedStatement pstmt = conn.prepareStatement(sql)) {
-            pstmt.executeUpdate();
-        } catch (SQLException e) {
-            e.printStackTrace();
-            throw new RuntimeException("DB 초기화 중 에러 발생");
-        }
-    }
-
-    // 4. 특정 게임 결과 삭제
-    public void delGame5Result(int id) {
+    // 3. 특정 게임 결과 삭제
+    public void delGame5Result(int id) throws SQLException {
         Connection conn = open();
         String sql = "DELETE FROM game5_results WHERE id = ?";
 
@@ -95,6 +85,34 @@ public class Game5DAO {
         } catch (SQLException e) {
             e.printStackTrace();
             throw new RuntimeException("DB 삭제 중 에러 발생");
+        }
+    }
+    
+    // 4. 모든 게임 결과 삭제
+    public void deleteAllGame5Results() throws SQLException {
+    	Connection conn = open();
+        String deleteSql = "DELETE FROM game5_results";
+        String alterSql = "ALTER TABLE game5_results AUTO_INCREMENT = 1";
+
+        try {
+            conn.setAutoCommit(false); // 트랜잭션 시작
+
+            try (PreparedStatement deleteStmt = conn.prepareStatement(deleteSql)) {
+                deleteStmt.executeUpdate();
+            }
+
+            try (PreparedStatement alterStmt = conn.prepareStatement(alterSql)) {
+                alterStmt.executeUpdate();
+            }
+
+            conn.commit(); // 트랜잭션 커밋
+        } catch (SQLException e) {
+            conn.rollback(); // 오류 시 롤백
+            e.printStackTrace();
+            throw new RuntimeException("DB 에러");
+        } finally {
+            conn.setAutoCommit(true); // 원상 복구
+            conn.close();
         }
     }
 }

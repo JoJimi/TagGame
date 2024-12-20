@@ -7,7 +7,7 @@ public class Game6Result {
 	private int id; 				// 게임 결과 id
 	private int gameId;				// 게임 id
 	private String name; 			// 당첨자 이름
-	private String content; 		//당첨된 내용 
+	private String content; 		// 당첨된 내용 
 	private LocalDateTime gameDate; // 게임 시작 시간
 
 	public Game6Result() { }

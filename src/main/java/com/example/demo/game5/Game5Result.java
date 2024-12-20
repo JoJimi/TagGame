@@ -7,16 +7,16 @@ public class Game5Result {
     private int participantCount;     // 참여한 사용자 수
     private int winnerApartmentFloor; // 당첨 아파트 층
     private int winnerUserNumber;     // 당첨된 사용자 번호
-    private LocalDateTime gameStartTime; // 게임 시작 시간
+    private LocalDateTime gameDate; // 게임 시작 시간
 
     public Game5Result() { }
 
-    public Game5Result(int id, int participantCount, int winnerApartmentFloor, int winnerUserNumber, LocalDateTime gameStartTime) {
+    public Game5Result(int id, int participantCount, int winnerApartmentFloor, int winnerUserNumber, LocalDateTime gameDate) {
         this.id = id;
         this.participantCount = participantCount;
         this.winnerApartmentFloor = winnerApartmentFloor;
         this.winnerUserNumber = winnerUserNumber;
-        this.gameStartTime = gameStartTime;
+        this.gameDate = gameDate;
     }
 
     public int getId() {
@@ -51,12 +51,12 @@ public class Game5Result {
         this.winnerUserNumber = winnerUserNumber;
     }
 
-    public LocalDateTime getGameStartTime() {
-        return gameStartTime;
+    public LocalDateTime getGameDate() {
+        return gameDate;
     }
 
-    public void setGameStartTime(LocalDateTime gameStartTime) {
-        this.gameStartTime = gameStartTime;
+    public void setGameDate(LocalDateTime gameDate) {
+        this.gameDate = gameDate;
     }
     
 }
