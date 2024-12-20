@@ -6,98 +6,135 @@
     <title>랜덤 박스 게임</title>
     <style>
         body {
-            font-family: Arial, sans-serif;
-            background-color: #f9fafb;
+            font-family: 'Press Start 2P', cursive;
+            background-color: #f0f0f0;
+            color: #333;
             margin: 0;
-            padding: 20px;
+            padding: 0;
         }
         .container {
-            max-width: 100%;
-            margin: 0 auto;
-            background: #fff;
-            border-radius: 10px;
-            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
-            padding: 20px;
+            max-width: 800px;
+            margin: 50px auto;
+            background: linear-gradient(145deg, #ffffff, #e0e0e0);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
             text-align: center;
-            overflow-x: auto;
         }
         h1 {
-            color: #007bff;
-            margin-bottom: 20px;
+            font-size: 48px;
+            color: #ff6f61;
+            text-shadow: 1px 2px 4px rgba(255, 111, 97, 0.7);
         }
         .input-group {
-            margin: 10px 0;
+            margin: 20px 0;
+            display: flex;
+            justify-content: center;
+            gap: 10px;
         }
-        input {
-            padding: 8px;
-            margin: 5px 0;
+        input[type="number"] {
+            padding: 10px;
             border: 1px solid #ccc;
             border-radius: 5px;
-            width: 100px;
+            font-size: 18px;
+            width: 150px;
             text-align: center;
+            background: #fff;
+            color: #333;
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
         }
         button {
-            background-color: #007bff;
+            background: linear-gradient(145deg, #ff6f61, #ff8a80);
             color: white;
-            padding: 10px 15px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
             font-size: 16px;
-            margin-top: 10px;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: transform 0.3s, box-shadow 0.3s;
         }
         button:hover {
-            background-color: #0056b3;
+            transform: scale(1.05);
+            box-shadow: 0 6px 15px rgba(255, 138, 128, 0.5);
         }
-        .button-group {
-		    display: flex;
-		    justify-content: center;
-		    align-items: center;
-		    gap: 10px; /* 버튼 간격 */
-		    margin-top: 20px;
-		}
+        button:active {
+            transform: scale(0.95);
+        }
         .ladder-container {
             display: flex;
             justify-content: center;
-            align-items: center;
-            margin: 20px auto;
-            gap: 50px;
-            position: relative;
+            flex-wrap: wrap;
+            gap: 20px;
+            margin-top: 30px;
         }
         .ladder-column {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            position: relative;
+            text-align: center;
         }
         .vertical-line {
-            width: 5px;
+            width: 6px;
             height: 400px;
-            background: #007bff;
+            background: linear-gradient(180deg, #ffcc00, #ff6f61);
+            margin: 10px auto;
+            border-radius: 3px;
             position: relative;
         }
-        .horizontal-line {
-            height: 5px;
-            background: #ff0000;
-            position: absolute;
-        }
         .question-img {
-            width: 40px;
-            height: 40px;
+            width: 50px;
+            height: 50px;
             position: absolute;
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
+            animation: bounce 1.5s infinite;
+        }
+        @keyframes bounce {
+            0%, 100% {
+                transform: translate(-50%, -50%) scale(1);
+            }
+            50% {
+                transform: translate(-50%, -45%) scale(1.1);
+            }
+        }
+        input[type="text"] {
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 14px;
+            width: 100px;
+            text-align: center;
+            background: #f7f7f7;
+            color: #333;
+        }
+        .button-group {
+            margin-top: 20px;
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+        }
+        .results {
+            margin-top: 20px;
+            display: grid;
+            gap: 15px;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+        }
+        .result-card {
+            background: #ff8a80;
+            color: white;
+            padding: 15px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(255, 138, 128, 0.3);
+            text-align: center;
+        }
+        .result-card span {
+            display: block;
+            font-size: 18px;
+            font-weight: bold;
         }
         #startGameButton {
             display: none;
         }
         #playGameButton {
             display: block;
-        }
-        .results {
-            margin-top: 20px;
-            font-size: 18px;
         }
     </style>
     <script>
@@ -111,7 +148,7 @@
             ladderMap = Array.from({ length: 400 }, () => Array(count).fill(false));
             startPoints = Array(count).fill("");
             endPoints = Array(count).fill("");
-            
+
             const ladderContainer = document.getElementById("ladder");
             ladderContainer.innerHTML = "";
 
@@ -175,7 +212,6 @@
             const startInputs = document.querySelectorAll(".start-input");
             const endInputs = document.querySelectorAll(".end-input");
 
-            // 입력 검증
             for (let i = 0; i < startInputs.length; i++) {
                 if (!startInputs[i].value.trim()) {
                     alert("출발지를 입력해주세요.");
@@ -187,19 +223,15 @@
                 }
             }
 
-            // `startPoints`와 `endPoints` 값 가져오기
             startPoints = Array.from(startInputs).map(input => input.value.trim());
             endPoints = Array.from(endInputs).map(input => input.value.trim());
 
-            // `endPoints` 배열 섞기
             shuffleArray(endPoints);
-            
-            // 동적으로 `form` 생성 및 데이터 전송
+
             const form = document.createElement("form");
             form.method = "POST";
             form.action = "/game6/play";
 
-            // `startPoints`와 `endPoints`를 폼 데이터로 추가
             startPoints.forEach((point, index) => {
                 const inputStart = document.createElement("input");
                 inputStart.type = "hidden";
@@ -214,7 +246,6 @@
                 form.appendChild(inputEnd);
             });
 
-            // 폼을 body에 추가 후 제출
             document.body.appendChild(form);
             form.submit();
         }
@@ -238,7 +269,7 @@
     <form onsubmit="handleFormSubmit(event)">
         <div class="input-group">
             <label for="playerCount">참여자 수:</label>
-            <input type="number" id="playerCount" min="2" max="15">
+            <input type="number" id="playerCount" min="2" max="15" placeholder="2~15명">
             <button type="submit">확인</button>
         </div>
     </form>
