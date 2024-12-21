@@ -113,50 +113,57 @@ button:active {
 
         // 원판 UI 생성
         const newMake = () => {
-            const [cw, ch] = [$c.width / 2, $c.height / 2];
-            const arc = Math.PI / (product.length / 2);  
-            ctx.clearRect(0, 0, $c.width, $c.height); // 캔버스 초기화
+    const [cw, ch] = [$c.width / 2, $c.height / 2];
+    const arc = Math.PI / (product.length / 2);  
+    ctx.clearRect(0, 0, $c.width, $c.height); // 캔버스 초기화
 
-            for (let i = 0; i < product.length; i++) {
-                ctx.beginPath();
-                if (colors.length == 0) {
-                    for (var l = 0; l < product.length; l++) {
-                        let r = Math.floor(Math.random() * 256);
-                        let g = Math.floor(Math.random() * 256);
-                        let b = Math.floor(Math.random() * 256);
-                        colors.push("rgb(" + r + "," + g + "," + b + ")");
-                    }
-                }
-                ctx.fillStyle = colors[i % colors.length];
-                ctx.moveTo(cw, ch);
-                ctx.arc(cw, ch, cw, arc * (i - 1), arc * i);
-                ctx.fill();
-                ctx.closePath();
+    // 흰색 배경 원 추가
+    ctx.beginPath();
+    ctx.fillStyle = "#ffffff"; // 흰색
+    ctx.arc(cw, ch, cw, 0, Math.PI * 2); // 원의 전체 둘레를 그림
+    ctx.fill();
+    ctx.closePath();
+
+    for (let i = 0; i < product.length; i++) {
+        ctx.beginPath();
+        if (colors.length == 0) {
+            for (var l = 0; l < product.length; l++) {
+                let r = Math.floor(Math.random() * 256);
+                let g = Math.floor(Math.random() * 256);
+                let b = Math.floor(Math.random() * 256);
+                colors.push("rgb(" + r + "," + g + "," + b + ")");
             }
+        }
+        ctx.fillStyle = colors[i % colors.length];
+        ctx.moveTo(cw, ch);
+        ctx.arc(cw, ch, cw, arc * (i - 1), arc * i);
+        ctx.fill();
+        ctx.closePath();
+    }
 
-            ctx.fillStyle = "#fff";
-            ctx.font = "18px Pretendard";
-            ctx.textAlign = "center";
+    ctx.fillStyle = "#fff";
+    ctx.font = "18px Pretendard";
+    ctx.textAlign = "center";
 
-            for (let i = 0; i < product.length; i++) {
-                const angle = (arc * i) + (arc / 2);
+    for (let i = 0; i < product.length; i++) {
+        const angle = (arc * i) + (arc / 2);
 
-                ctx.save();
+        ctx.save();
 
-                ctx.translate(
-                    cw + Math.cos(angle) * (cw - 50),
-                    ch + Math.sin(angle) * (ch - 50)
-                );
+        ctx.translate(
+            cw + Math.cos(angle) * (cw - 50),
+            ch + Math.sin(angle) * (ch - 50)
+        );
 
-                ctx.rotate(angle + Math.PI / 2);
+        ctx.rotate(angle + Math.PI / 2);
 
-                product[i].split(" ").forEach((text, j) => {
-                    ctx.fillText(text, 0, 30 * j);
-                });
+        product[i].split(" ").forEach((text, j) => {
+            ctx.fillText(text, 0, 30 * j);
+        });
 
-                ctx.restore();
-            }
-        };
+        ctx.restore();
+    }
+};
 
         // 룰렛 회전
         const rRotate = () => {
