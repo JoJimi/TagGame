@@ -89,7 +89,7 @@ button:active {
 		<div style="text-align: center; margin-top: 20px;">
 			<form method="get"
 				action="${pageContext.request.contextPath}/game3/results">
-				<button type="submit">결과 조회</button>
+				<button type="submit">게임 결과 모음</button>
 			</form>
 		</div>
 	</div>
