@@ -73,12 +73,14 @@ button:active {
 		<button type="button" onclick="rRotate()">돌려돌려 돌림판</button>
 
 		<!-- 이름 추가 영역 -->
+		<hr>
 		<div id="addDiv">
 			<input type="text" id="menuAdd" placeholder="이름을 입력하세요" />
 			<button onclick="add()">이름 추가</button>
 		</div>
 
 		<!-- 결과 표시 -->
+		<hr>
 		<div id="result">
 			<h2>
 				당첨자: <span id="winnerName"></span>
@@ -86,7 +88,7 @@ button:active {
 		</div>
 
 		<!-- 결과 조회 버튼 -->
-		<div style="text-align: center; margin-top: 20px;">
+		<div style="text-align: center; margin-top: 10px;">
 			<form method="get"
 				action="${pageContext.request.contextPath}/game3/results">
 				<button type="submit">게임 결과 모음</button>
