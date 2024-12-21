@@ -193,20 +193,41 @@ button:disabled {
 	</div>
 
 	<script>
-		// 이미지 선택 시 선택된 스타일 적용
-		const choices = document.querySelectorAll('.image-choice');
-		choices.forEach(choice => {
-			choice.addEventListener('click', () => {
-				// 모든 선택에서 'selected' 클래스 제거
-				choices.forEach(c => c.classList.remove('selected'));
+    // 이미지 선택 시 선택된 스타일 적용
+    const choices = document.querySelectorAll('.image-choice');
+    const form = document.querySelector('form');
+    const userChoiceInputs = document.querySelectorAll('input[name="userChoice"]');
 
-				// 클릭된 선택에 'selected' 클래스 추가
-				choice.classList.add('selected');
+    choices.forEach(choice => {
+        choice.addEventListener('click', () => {
+            // 모든 선택에서 'selected' 클래스 제거
+            choices.forEach(c => c.classList.remove('selected'));
 
-				// 내부 라디오 버튼 선택
-				choice.querySelector('input').checked = true;
-			});
-		});
-	</script>
+            // 클릭된 선택에 'selected' 클래스 추가
+            choice.classList.add('selected');
+
+            // 내부 라디오 버튼 선택
+            choice.querySelector('input').checked = true;
+        });
+    });
+
+    // '게임 시작' 버튼 클릭 시 예외처리
+    form.addEventListener('submit', (event) => {
+        let isChoiceSelected = false;
+
+        // 선택된 라디오 버튼이 있는지 확인
+        userChoiceInputs.forEach(input => {
+            if (input.checked) {
+                isChoiceSelected = true;
+            }
+        });
+
+        // 선택되지 않았으면 alert 표시 및 폼 제출 중단
+        if (!isChoiceSelected) {
+            event.preventDefault(); // 폼 제출 중단
+            alert("가위, 바위, 보 중 하나를 선택해 주세요!");
+        }
+    });
+</script>
 </body>
 </html>
