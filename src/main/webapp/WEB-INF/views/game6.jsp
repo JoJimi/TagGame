@@ -1,10 +1,12 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <!DOCTYPE html>
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
     <title>랜덤 박스 게임</title>
     <style>
+        /* 기존 스타일 유지 */
         body {
             font-family: 'Press Start 2P', cursive;
             background-color: #f0f0f0;
@@ -111,11 +113,19 @@
             justify-content: center;
             gap: 20px;
         }
+        .results-section {
+            margin-top: 30px;
+            text-align: left;
+        }
+        .results-section h2 {
+            font-size: 24px;
+            color: #ff6f61;
+            margin-bottom: 15px;
+        }
         .results {
-            margin-top: 20px;
             display: grid;
-            gap: 15px;
-            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 10px;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
         }
         .result-card {
             background: #ff8a80;
@@ -124,10 +134,13 @@
             border-radius: 10px;
             box-shadow: 0 4px 8px rgba(255, 138, 128, 0.3);
             text-align: center;
+            font-size: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
         .result-card span {
-            display: block;
-            font-size: 18px;
+            margin: 0 5px;
             font-weight: bold;
         }
         #startGameButton {
@@ -135,6 +148,24 @@
         }
         #playGameButton {
             display: block;
+        }
+        /* Alert styles */
+        .alert {
+            padding: 15px;
+            margin-bottom: 20px;
+            border: 1px solid transparent;
+            border-radius: 4px;
+            text-align: center;
+        }
+        .alert-success {
+            color: #155724;
+            background-color: #d4edda;
+            border-color: #c3e6cb;
+        }
+        .alert-danger {
+            color: #721c24;
+            background-color: #f8d7da;
+            border-color: #f5c6cb;
         }
     </style>
     <script>
@@ -152,8 +183,10 @@
             const ladderContainer = document.getElementById("ladder");
             ladderContainer.innerHTML = "";
 
+            // Ensure ladderContainer has width to calculate gap
+            ladderContainer.style.width = "100%";
             const containerWidth = ladderContainer.offsetWidth - 50;
-            const gapWidth = containerWidth / (count - 1);
+            const gapWidth = count > 1 ? containerWidth / (count - 1) : 0;
 
             for (let i = 0; i < count; i++) {
                 const ladderColumn = document.createElement("div");
@@ -176,7 +209,7 @@
                 verticalLine.dataset.column = i;
 
                 const questionImg = document.createElement("img");
-                questionImg.src = "/images/question.png";
+                questionImg.src = "/images/question.png"; // 이미지 경로 확인 필요
                 questionImg.className = "question-img";
                 verticalLine.appendChild(questionImg);
 
@@ -198,7 +231,8 @@
 
             document.getElementById("startGameButton").style.display = "inline-block";
             document.getElementById("playGameButton").style.display = "inline-block";
-            document.getElementById("results").innerHTML = "";
+            document.getElementById("saveGameButton").style.display = "none"; // Hide save button initially
+            document.getElementById("resultsSection").style.display = "none"; // 결과 섹션 숨기기
         }
 
         function shuffleArray(array) {
@@ -228,25 +262,61 @@
 
             shuffleArray(endPoints);
 
-            const form = document.createElement("form");
-            form.method = "POST";
-            form.action = "/game6/play";
+            // Display results
+            const resultsContainer = document.getElementById("results");
+            resultsContainer.innerHTML = ""; // Clear previous results
 
-            startPoints.forEach((point, index) => {
-                const inputStart = document.createElement("input");
-                inputStart.type = "hidden";
-                inputStart.name = "startPoints";
-                inputStart.value = point;
-                form.appendChild(inputStart);
+            for (let i = 0; i < playerCount; i++) {
+                const resultCard = document.createElement("div");
+                resultCard.className = "result-card";
 
-                const inputEnd = document.createElement("input");
-                inputEnd.type = "hidden";
-                inputEnd.name = "endPoints";
-                inputEnd.value = endPoints[index];
-                form.appendChild(inputEnd);
+                const startSpan = document.createElement("span");
+                startSpan.textContent = startPoints[i];
+
+                const arrowSpan = document.createElement("span");
+                arrowSpan.textContent = "→";
+
+                const endSpan = document.createElement("span");
+                endSpan.textContent = endPoints[i];
+
+                resultCard.appendChild(startSpan);
+                resultCard.appendChild(arrowSpan);
+                resultCard.appendChild(endSpan);
+
+                resultsContainer.appendChild(resultCard);
+            }
+
+            // Show results section
+            document.getElementById("resultsSection").style.display = "block";
+
+            // Hide the start game button and show the save game button
+            document.getElementById("startGameButton").style.display = "none";
+            document.getElementById("saveGameButton").style.display = "inline-block";
+        }
+
+        function populateAndSubmitForm() {
+            const form = document.getElementById("saveGameForm");
+            form.innerHTML = ''; // Clear any existing inputs
+
+            // Add startPoints
+            startPoints.forEach(point => {
+                const input = document.createElement("input");
+                input.type = "hidden";
+                input.name = "startPoints";
+                input.value = point;
+                form.appendChild(input);
             });
 
-            document.body.appendChild(form);
+            // Add endPoints
+            endPoints.forEach(point => {
+                const input = document.createElement("input");
+                input.type = "hidden";
+                input.name = "endPoints";
+                input.value = point;
+                form.appendChild(input);
+            });
+
+            // Submit the form
             form.submit();
         }
 
@@ -259,6 +329,7 @@
             }
             document.getElementById("startGameButton").style.display = "none";
             document.getElementById("playGameButton").style.display = "none";
+            document.getElementById("saveGameButton").style.display = "none";
             generateLadder(count);
         }
     </script>
@@ -266,10 +337,19 @@
 <body>
 <div class="container">
     <h1>랜덤 박스 게임</h1>
+    
+    <!-- Display flash messages -->
+    <c:if test="${not empty message}">
+        <div class="alert alert-success">${message}</div>
+    </c:if>
+    <c:if test="${not empty error}">
+        <div class="alert alert-danger">${error}</div>
+    </c:if>
+
     <form onsubmit="handleFormSubmit(event)">
         <div class="input-group">
             <label for="playerCount">참여자 수:</label>
-            <input type="number" id="playerCount" min="2" max="15" placeholder="2~15명">
+            <input type="number" id="playerCount" min="2" max="15" placeholder="2~15명" required>
             <button type="submit">확인</button>
         </div>
     </form>
@@ -278,12 +358,27 @@
 
     <div class="button-group">
         <button id="startGameButton" type="button" onclick="generateRandomBox()">랜덤 박스 생성</button>
+        <!-- 게임 기록 버튼은 서버와 연동되어 있으므로 유지 -->
         <form action="/game6/results" method="get" style="display: inline;">
             <button id="playGameButton" type="submit">게임 기록</button>
         </form>
+        <form action="/" method="get" style="display: inline;">
+            <button type="submit">🏠 홈으로</button>
+        </form>
+        <!-- Save Game Button -->
+        <button id="saveGameButton" type="button" onclick="populateAndSubmitForm()" style="display: none;">게임 결과 저장</button>
     </div>
 
-    <div id="results" class="results"></div>
+    <!-- 결과 섹션 추가 -->
+    <div id="resultsSection" class="results-section" style="display: none;">
+        <h2>게임 결과</h2>
+        <div id="results" class="results"></div>
+    </div>
+
+    <!-- Hidden form to save game results -->
+    <form id="saveGameForm" action="/game6/play" method="post" style="display:none;">
+        <!-- Hidden inputs will be added dynamically via JavaScript -->
+    </form>
 </div>
 </body>
 </html>
