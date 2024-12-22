@@ -158,15 +158,20 @@ button:disabled {
 
 			<!-- 버튼 영역 -->
 			<div style="display: flex; justify-content: space-between; margin-top: 20px;">
-				<!-- 게임 시작 버튼 -->
-				<form action="/game2/play" method="post">
-					<button type="submit">게임 시작</button>
-				</form>
-
-				<!-- 게임 기록 버튼 -->
-				<form action="/game2/results" method="get">
-					<button type="submit">게임 기록</button>
-				</form>
+			    <!-- 게임 시작 버튼 -->
+			    <form action="/game2/play" method="post">
+			        <button type="submit">게임 시작</button>
+			    </form>
+			
+				<!-- 돌아가기 버튼 -->
+			    <form action="/" method="get">
+			        <button type="submit">돌아가기</button>
+			    </form>
+			
+			    <!-- 게임 기록 버튼 -->
+			    <form action="/game2/results" method="get">
+			        <button type="submit">게임 기록</button>
+			    </form>
 			</div>
 		</form>
 		<hr>
