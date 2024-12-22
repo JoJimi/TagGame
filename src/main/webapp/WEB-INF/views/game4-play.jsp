@@ -109,7 +109,16 @@
     </div>
 
     <!-- 당첨자 표시 영역 -->
-    <div id="winner"></div>
+	<div id="winner"></div>
+	
+	<!-- 돌아가기 버튼 -->
+	<div style="text-align: center; margin-top: 20px;">
+	    <form method="get" action="/">
+	        <button type="submit" style="padding: 10px 20px; font-size: 16px; background-color: #3498db; color: #fff; border: none; border-radius: 5px; cursor: pointer;">
+	            돌아가기
+	        </button>
+	    </form>
+	</div>
 
     <script>
         const players = document.querySelectorAll('.player');
