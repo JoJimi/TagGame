@@ -163,6 +163,9 @@
             <form action="/game5/results" method="get" style="display: inline;">
                 <button>📜 게임 기록</button>
             </form>
+            <form action="/" method="get" style="display: inline;">
+                <button>🏠 돌아가기</button>
+            </form>
         </div>
     </div>
 </body>
