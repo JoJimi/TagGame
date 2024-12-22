@@ -122,6 +122,36 @@
 		    transform: scale(1.1);
 		    box-shadow: 0 6px 12px rgba(255, 0, 0, 0.3);
 		}
+		.back-button {
+            display: inline-block;
+            margin-top: 20px;
+            padding: 12px 24px;
+            font-size: 20px;
+            font-weight: bold;
+            color: #ecf0f1;
+            background: #3498db;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            text-decoration: none;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+            transition: background-color 0.3s, transform 0.2s, box-shadow 0.3s;
+            margin-left: 10px; /* "다시 시작하기" 버튼과 간격 */
+        }
+
+        .back-button:hover {
+            background: #2980b9;
+            transform: scale(1.1);
+            box-shadow: 0 6px 12px rgba(0, 0, 255, 0.3);
+        }
+
+        .button-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px; /* 버튼 간격 조정 */
+            margin-top: 20px;
+        }
     </style>
 </head>
 <body>
@@ -145,7 +175,10 @@
     <!-- 게임 종료 메시지 -->
     <c:if test="${gameOver}">
         <div class="game-over">${message}</div>
-        <a href="/game1" class="restart-button">다시 시작하기</a>
+        <div class="button-container">
+            <a href="/game1" class="restart-button">다시 시작하기</a>
+            <a href="/" class="back-button">돌아가기</a>
+        </div>
     </c:if>
 
     <!-- 숨겨진 폼 -->
