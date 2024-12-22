@@ -87,12 +87,17 @@ button:active {
 			</h2>
 		</div>
 
-		<!-- 결과 조회 버튼 -->
+		<!-- 결과 조회 및 돌아가기 버튼 -->
 		<div style="text-align: center; margin-top: 10px;">
-			<form method="get"
-				action="${pageContext.request.contextPath}/game3/results">
-				<button type="submit">게임 결과 모음</button>
-			</form>
+		    <!-- 게임 결과 모음 버튼 -->
+		    <form method="get" action="${pageContext.request.contextPath}/game3/results" style="display: inline;">
+		        <button type="submit">게임 결과 모음</button>
+		    </form>
+		
+		    <!-- 돌아가기 버튼 -->
+		    <form method="get" action="/" style="display: inline;">
+		        <button type="submit">돌아가기</button>
+		    </form>
 		</div>
 	</div>
 
